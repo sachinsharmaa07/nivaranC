@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo:7
+    container_name: nivaran-mongo
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    environment:
+      MONGO_INITDB_DATABASE: nivaran
+
+  backend:
+    image: sachinsharmaa07/nivaran-backend:latest
+    container_name: nivaran-backend
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    depends_on:
+      - mongo
+    env_file:
+      - .env
+
+  frontend:
+    image: sachinsharmaa07/nivaran-frontend:latest
+    container_name: nivaran-frontend
+    restart: unless-stopped
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+
+volumes:
+  mongo-data:
+

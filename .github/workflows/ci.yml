@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+
+jobs:
+  build-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - run: npm install
+        working-directory: server
+
+  build-frontend:
+    runs-on: ubuntu-latest
+    needs: build-backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - run: npm install
+        working-directory: client
+      - run: npm run build
+        working-directory: client
+
+  docker-build-backend:
+    runs-on: ubuntu-latest
+    needs: build-frontend
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t nivaran-backend ./server
+
+  docker-build-frontend:
+    runs-on: ubuntu-latest
+    needs: docker-build-backend
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t nivaran-frontend ./client
+
