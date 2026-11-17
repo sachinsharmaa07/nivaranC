@@ -4,5 +4,7 @@ node_modules
 .DS_Store
 *.md
 !README.md
+!CAPSTONE_PROJECT_REPORT.md
+!HOSTING.md
 
 
