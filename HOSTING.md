@@ -205,6 +205,114 @@ This pulls the latest images and restarts only the changed containers.
 
 ---
 
+## 11. Hosting with Duck DNS (Free Domain & Optional HTTPS)
+
+Duck DNS gives you a free permanent subdomain (e.g. `your-name.duckdns.org`) pointing to your EC2 instance.
+
+### Step 1: Create Duck DNS Subdomain
+1. Go to [https://www.duckdns.org](https://www.duckdns.org) and log in with GitHub or Google.
+2. In the **domains** section, type your desired subdomain (e.g. `nivaran-live`) and click **add domain**.
+3. In the **current ip** field, enter your EC2 Public IP and click **update ip**.
+4. Note your **Duck DNS Token** displayed at the top of the Duck DNS page.
+
+### Step 2: Auto-Update IP on EC2 (Handles IP changes on restart)
+On your EC2 terminal:
+
+```bash
+mkdir -p ~/duckdns && cd ~/duckdns
+cat << 'EOF' > duck.sh
+echo url="https://www.duckdns.org/update?domains=YOUR_SUBDOMAIN&token=YOUR_DUCKDNS_TOKEN&ip=" | curl -k -o ~/duckdns/duck.log -K -
+EOF
+
+# Replace YOUR_SUBDOMAIN and YOUR_DUCKDNS_TOKEN with your actual values
+chmod 700 duck.sh
+./duck.sh
+cat duck.log # Should output: OK
+
+# Add cron job to update every 5 minutes
+(crontab -l 2>/dev/null; echo "*/5 * * * * ~/duckdns/duck.sh >/dev/null 2>&1") | crontab -
+```
+
+### Step 3: Configure Nivaran for Duck DNS
+
+#### Option A: Direct Port Access (Quickest — 1 minute)
+Update `~/nivaran/.env`:
+
+```env
+CLIENT_URL=http://YOUR_SUBDOMAIN.duckdns.org:5173
+VITE_API_URL=http://YOUR_SUBDOMAIN.duckdns.org:5000
+```
+
+Then restart:
+```bash
+cd ~/nivaran && docker compose up -d
+```
+Access at: `http://YOUR_SUBDOMAIN.duckdns.org:5173`
+
+#### Option B: Professional HTTPS on Port 443 (Nginx + Free SSL)
+Run frontend on `https://YOUR_SUBDOMAIN.duckdns.org` with no port numbers:
+
+1. Install Nginx & Certbot on EC2:
+```bash
+sudo apt install -y nginx certbot python3-certbot-nginx
+```
+
+2. Configure Nginx reverse proxy:
+```bash
+sudo nano /etc/nginx/sites-available/nivaran
+```
+Paste:
+```nginx
+server {
+    server_name YOUR_SUBDOMAIN.duckdns.org;
+
+    location / {
+        proxy_pass http://localhost:5173;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+    }
+
+    location /api/ {
+        proxy_pass http://localhost:5000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location /socket.io/ {
+        proxy_pass http://localhost:5000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host $host;
+    }
+}
+```
+
+3. Enable site and get free SSL certificate:
+```bash
+sudo ln -s /etc/nginx/sites-available/nivaran /etc/nginx/sites-enabled/
+sudo rm -f /etc/nginx/sites-enabled/default
+sudo nginx -t && sudo systemctl reload nginx
+sudo certbot --nginx -d YOUR_SUBDOMAIN.duckdns.org --non-interactive --agree-tos -m your-email@example.com
+```
+
+4. Update `~/nivaran/.env`:
+```env
+CLIENT_URL=https://YOUR_SUBDOMAIN.duckdns.org
+VITE_API_URL=https://YOUR_SUBDOMAIN.duckdns.org
+```
+Restart:
+```bash
+cd ~/nivaran && docker compose up -d
+```
+Now Nivaran is live with a green SSL padlock at: `https://YOUR_SUBDOMAIN.duckdns.org`
+
+---
+
 ## Useful Commands
 
 ```bash
