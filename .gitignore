@@ -3,6 +3,7 @@ node_modules
 *.log
 .DS_Store
 *.pem
+*.pub
 *.md
 !README.md
 !CAPSTONE_PROJECT_REPORT.md
