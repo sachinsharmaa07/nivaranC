@@ -7,13 +7,13 @@ let transporter = null
 
 const getTransporter = () => {
   if (!transporter) {
+    const user = process.env.EMAIL_USER?.trim()
+    const pass = process.env.EMAIL_PASS?.replace(/\s+/g, '')
     transporter = nodemailer.createTransport({
-      host: 'smtp.gmail.com',
-      port: 587,
-      secure: false,
+      service: 'gmail',
       auth: {
-        user: process.env.EMAIL_USER?.trim(),
-        pass: process.env.EMAIL_PASS?.trim(),
+        user,
+        pass,
       },
     })
   }
@@ -27,7 +27,7 @@ export const sendEmail = async (to, subject, html) => {
   }
   try {
     const mailOptions = {
-      from: process.env.EMAIL_USER,
+      from: `"Nivaran Platform" <${process.env.EMAIL_USER.trim()}>`,
       to,
       subject,
       html,
