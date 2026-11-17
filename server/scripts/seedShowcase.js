@@ -77,6 +77,12 @@ async function run() {
   // Step 4: Create Universal Showcase Accounts (Easy to remember!)
   console.log('\n--- Step 3: Creating Universal Showcase Accounts ---')
 
+  // Clear any existing primary admin for this municipality so we don't violate the partial unique index
+  await User.updateMany(
+    { municipality: jalandhar._id, role: 'admin', isPrimaryAdmin: true },
+    { $set: { isPrimaryAdmin: false } }
+  )
+
   // Universal City Admin
   await User.findOneAndUpdate(
     { email: 'admin@nivaran.gov' },
