@@ -21,6 +21,10 @@ const getTransporter = () => {
 }
 
 export const sendEmail = async (to, subject, html) => {
+  if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
+    console.warn(`[sendEmail] EMAIL_USER or EMAIL_PASS not configured. Email to "${to}" with subject "${subject}" skipped.`)
+    return
+  }
   try {
     const mailOptions = {
       from: process.env.EMAIL_USER,
@@ -31,8 +35,7 @@ export const sendEmail = async (to, subject, html) => {
 
     await getTransporter().sendMail(mailOptions)
   } catch (error) {
-    console.error('Error sending email:', error)
-    throw new Error('Failed to send email')
+    console.warn(`[sendEmail] Error sending email to ${to}:`, error.message)
   }
 }
 

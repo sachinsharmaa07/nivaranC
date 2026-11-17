@@ -24,6 +24,7 @@
     "explain:queries": "node scripts/explainQueries.js",
     "db:sync-indexes": "node scripts/syncIndexes.js",
     "superadmin:create": "node scripts/createSuperAdmin.js",
+    "seed:showcase": "node scripts/seedShowcase.js",
     "migrate:staff-approval": "node scripts/migrateStaffApproval.js",
     "migrate:sectors": "node scripts/migrateSectors.js"
   },
