@@ -22,6 +22,9 @@ services:
       - mongo
     env_file:
       - .env
+    volumes:
+      - ./repo/server:/app
+      - /app/node_modules
 
   frontend:
     image: sachinsharmaa07/nivaran-frontend:latest
@@ -31,6 +34,9 @@ services:
       - "5173:5173"
     env_file:
       - .env
+    volumes:
+      - ./repo/client:/app
+      - /app/node_modules
     depends_on:
       - backend
 
