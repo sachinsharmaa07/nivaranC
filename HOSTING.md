@@ -50,7 +50,7 @@ Replace `<EC2-PUBLIC-IP>` with your instance's public IP.
 
 ```bash
 sudo apt update && sudo apt upgrade -y
-sudo apt install -y docker.io docker-compose-v2
+sudo apt install -y docker.io docker-compose-plugin
 sudo usermod -aG docker ubuntu
 newgrp docker
 ```
