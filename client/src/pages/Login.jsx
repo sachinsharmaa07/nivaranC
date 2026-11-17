@@ -150,6 +150,102 @@ export default function Login() {
         </button>
       </div>
 
+      {/* ── 1-Click Showcase Demo Logins ─────────────────────────── */}
+      <div className={`mb-5 p-3 rounded-xl border ${
+        isDark ? 'bg-slate-900/40 border-amber-500/20' : 'bg-amber-50/70 border-amber-200'
+      }`}>
+        <div className="flex items-center justify-between mb-2">
+          <span className={`text-[11px] font-black uppercase tracking-wider flex items-center gap-1.5 ${
+            isDark ? 'text-amber-400' : 'text-amber-800'
+          }`}>
+            <span>⚡</span>
+            <span>Showcase Demo Logins</span>
+          </span>
+          <span className="text-[10px] text-amber-600 font-mono">1-Click Autofill</span>
+        </div>
+        <div className="grid grid-cols-2 gap-1.5">
+          <button
+            type="button"
+            onClick={() => {
+              setActiveRole('staff')
+              setFormData({ email: 'superadmin@nivaran.gov', password: 'Admin@123456' })
+            }}
+            className={`py-1.5 px-2 rounded-lg text-[11px] font-bold text-left border transition ${
+              formData.email === 'superadmin@nivaran.gov'
+                ? 'bg-amber-500/20 border-amber-500/50 text-amber-300'
+                : isDark
+                ? 'bg-slate-800/80 border-slate-700 hover:border-amber-500/40 text-slate-200'
+                : 'bg-white border-slate-200 hover:border-amber-400 text-slate-800 shadow-sm'
+            }`}
+          >
+            <div className="flex items-center justify-between">
+              <span>👑 Super Admin</span>
+            </div>
+            <div className="text-[9px] opacity-70 font-mono truncate">superadmin@nivaran.gov</div>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              setActiveRole('staff')
+              setFormData({ email: 'admin@nivaran.gov', password: 'Demo@123' })
+            }}
+            className={`py-1.5 px-2 rounded-lg text-[11px] font-bold text-left border transition ${
+              formData.email === 'admin@nivaran.gov'
+                ? 'bg-amber-500/20 border-amber-500/50 text-amber-300'
+                : isDark
+                ? 'bg-slate-800/80 border-slate-700 hover:border-amber-500/40 text-slate-200'
+                : 'bg-white border-slate-200 hover:border-amber-400 text-slate-800 shadow-sm'
+            }`}
+          >
+            <div className="flex items-center justify-between">
+              <span>🏛 City Admin</span>
+            </div>
+            <div className="text-[9px] opacity-70 font-mono truncate">admin@nivaran.gov</div>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              setActiveRole('staff')
+              setFormData({ email: 'staff@nivaran.gov', password: 'Demo@123' })
+            }}
+            className={`py-1.5 px-2 rounded-lg text-[11px] font-bold text-left border transition ${
+              formData.email === 'staff@nivaran.gov'
+                ? 'bg-amber-500/20 border-amber-500/50 text-amber-300'
+                : isDark
+                ? 'bg-slate-800/80 border-slate-700 hover:border-amber-500/40 text-slate-200'
+                : 'bg-white border-slate-200 hover:border-amber-400 text-slate-800 shadow-sm'
+            }`}
+          >
+            <div className="flex items-center justify-between">
+              <span>👷 Staff Officer</span>
+            </div>
+            <div className="text-[9px] opacity-70 font-mono truncate">staff@nivaran.gov</div>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => {
+              setActiveRole('citizen')
+              setFormData({ email: 'citizen@nivaran.gov', password: 'Demo@123' })
+            }}
+            className={`py-1.5 px-2 rounded-lg text-[11px] font-bold text-left border transition ${
+              formData.email === 'citizen@nivaran.gov'
+                ? 'bg-amber-500/20 border-amber-500/50 text-amber-300'
+                : isDark
+                ? 'bg-slate-800/80 border-slate-700 hover:border-amber-500/40 text-slate-200'
+                : 'bg-white border-slate-200 hover:border-amber-400 text-slate-800 shadow-sm'
+            }`}
+          >
+            <div className="flex items-center justify-between">
+              <span>👤 Citizen</span>
+            </div>
+            <div className="text-[9px] opacity-70 font-mono truncate">citizen@nivaran.gov</div>
+          </button>
+        </div>
+      </div>
+
       {/* ── Error Banner ────────────────────────────────────────── */}
       {error && (
         <div className="mb-5 p-3.5 rounded-xl text-xs bg-red-500/10 border border-red-500/30 text-red-500 flex items-start gap-2.5">
