@@ -12,18 +12,24 @@
 import dotenv from 'dotenv'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import fs from 'fs'
 import mongoose from 'mongoose'
 import bcrypt from 'bcryptjs'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
-dotenv.config({ path: path.join(__dirname, '..', '.env') })
 
-import connectDB from '../config/db.js'
-import User from '../models/User.js'
-import Municipality from '../models/Municipality.js'
-import Department from '../models/Department.js'
-import { seedDatabase } from '../seed.js'
+const rootDir = fs.existsSync(path.join(__dirname, 'config', 'db.js'))
+  ? __dirname
+  : path.join(__dirname, '..')
+
+dotenv.config({ path: path.join(rootDir, '.env') })
+
+const { default: connectDB } = await import(path.join(rootDir, 'config', 'db.js'))
+const { default: User } = await import(path.join(rootDir, 'models', 'User.js'))
+const { default: Municipality } = await import(path.join(rootDir, 'models', 'Municipality.js'))
+const { default: Department } = await import(path.join(rootDir, 'models', 'Department.js'))
+const { seedDatabase } = await import(path.join(rootDir, 'seed.js'))
 
 async function run() {
   console.log('========================================================')
